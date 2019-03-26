@@ -14,15 +14,15 @@ module.exports = sequelize.define('artist', {
 		validate: {
 			notEmpty: {
 				args: true,
-				msg: 'Name is required'
+				msg: 'Artist name is required'
 			},
 			isAlpha: {
 				args: true,
-				msg: 'Name must only contain letters'
+				msg: 'Artist name must only contain letters'
 			},
 			len: {
 				args: [2, 10],
-				msg: 'Name must be between 2 and 10 characters'
+				msg: 'Artist name must be between 2 and 10 characters'
 			}
 		}
 	}

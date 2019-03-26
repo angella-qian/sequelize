@@ -32,21 +32,45 @@ Track.belongsToMany(Playlist, {
 	timestamps: false
 })
 
-// const sequelize = new Sequelize('sqlite:chinook.db');
+/*const sequelize = new Sequelize('sqlite:chinook.db');
 
-// const Playlist = sequelize.define('playlist', {
-// 	id: {
-// 		field: 'PlaylistId',
-// 		type: Sequelize.INTEGER,
-// 		primaryKey: true
-// 	},
-// 	name: {
-// 		field: 'Name',
-// 		type: Sequelize.STRING
-// 	}
-// }, {
-// 	timestamps: false
-// });
+const Playlist = sequelize.define('playlist', {
+	id: {
+		field: 'PlaylistId',
+		type: Sequelize.INTEGER,
+		primaryKey: true
+	},
+	name: {
+		field: 'Name',
+		type: Sequelize.STRING
+	}
+}, {
+	timestamps: false
+});*/
+
+app.patch('/api/tracks/:id', function (request, response) {
+	let { id } = request.params;
+	let { updates } = request.body;
+
+	Track.findByPk(id, {
+		include: [Playlist]
+		}).then( (track) => {
+			if (track) {
+				return track.updateAttributes(updates)
+			} else {
+				return Promise.reject();
+			}
+		}).then( (updatedTrack) => {
+			// If the update passes validation, respond with a 200 status code and 
+			// the updated track in the response body
+			response.json(updatedTrack);
+			response.status(200).send();
+		}, () => {
+			// If the track isn’t found, return an empty response with a 404 status code.
+			response.status(404).send();
+		});
+
+});
 
 app.delete('/api/playlists/:id', function(request, response) {
 	let { id } = request.params;

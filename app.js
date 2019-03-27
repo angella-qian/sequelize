@@ -50,26 +50,33 @@ const Playlist = sequelize.define('playlist', {
 
 app.patch('/api/tracks/:id', function (request, response) {
 	let { id } = request.params;
-	let { updates } = request.body;
+	let updates = request.body;
 
 	Track.findByPk(id, {
 		include: [Playlist]
-		}).then( (track) => {
+		}).then((track) => {
+			console.log(track);
 			if (track) {
-				return track.updateAttributes(updates)
+				return track.update(updates);
 			} else {
 				return Promise.reject();
 			}
-		}).then( (updatedTrack) => {
+		}).then((updatedTrack) => {
 			// If the update passes validation, respond with a 200 status code and 
 			// the updated track in the response body
 			response.json(updatedTrack);
 			response.status(200).send();
-		}, () => {
+		}, (validation) => {
 			// If the track isn’t found, return an empty response with a 404 status code.
-			response.status(404).send();
+			response.status(404).json({
+				errors: validation.errors.map((error) => {
+					return {
+						attribute: error.path,
+						message: error.message
+					};
+				})
+			});
 		});
-
 });
 
 app.delete('/api/playlists/:id', function(request, response) {

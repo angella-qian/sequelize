@@ -23,7 +23,7 @@ module.exports = sequelize.define('track', {
 		field: 'Milliseconds',
 		type: Sequelize.INTEGER,
 		validate: {
-			numericality: {
+			isNumeric: {
 				args: true,
 				msg: 'Milliseconds must be numeric'
 			}
@@ -33,7 +33,7 @@ module.exports = sequelize.define('track', {
 		field: 'UnitPrice',
 		type: Sequelize.INTEGER,
 		validate: {
-			numericality: {
+			isNumeric: {
 				args: true,
 				msg: 'Unit Price must be numeric'
 			}
